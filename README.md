@@ -1,1 +1,0 @@
-# Calculo-de-la-aceleracion-de-la-gravedad

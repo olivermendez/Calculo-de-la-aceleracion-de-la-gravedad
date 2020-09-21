@@ -1,0 +1,160 @@
+---
+title: "Tarea 1"
+author: "Oliver Mendez"
+date: "20 de septiembre 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Es muy habitual la utilización de software para abordar estudios cuantitativos de muchos problemas físicos, ya que la realidad es tan compleja que el tratamiento matemático de la mayoría de los sistemas ofrece unas dificultades muy considerables.
+
+En esta ocasión, vamos a ilustrar el caso del péndulo simple. Así como lo detalla el ejercicio (Tarea 1), es un sistema idealizado de un solo grado de libertad, un objeto de masa m, sostenido por un hilo cuya masa es despreciable que puede describirse expresando en función del tiempo su distancia angular a una dirección de referencia, tal como la vertical en un determinado punto, el considerar este sistema como idealizado se restringe las observaciones a excluir la fricción presente.
+
+# Estructura de la información de entrada
+
+Segun los requerimientos del ejercicio, se hace factible de manera favorable dar la información de entrada mediante un fichero delimitado por comas “,”. Ese fichero dispondría de dos columnas con sus nombres en la primera línea del fichero con el siguiente significado:
+
+Columna     | Contenido
+-----------|-----------
+L(cm)   | Longuitud de la cuerda (cm) obtenida.
+P(s)   | Periodos P (segundos) obtenido en la medición.
+N(oxi)   | Numero de oscilaciones obtenida en la medición.
+
+Cada línea posterior a la primera se corresponde con cada una de las mediciones efectuadas. 
+
+El fichero mediciones.csv, obtenido a partir del fichero mediciones.ods, es un ejemplo de la estructura anterior. Ésta puede apreciarse tecleando en la consola de R el siguiente comando cuyo resultado se muestra:
+
+
+```{r comment= NA}
+writeLines(readLines(con = "mediciones.csv"), sep = "\n")
+```
+
+## Procedimento
+
+Para realizar las pruebas, se utilizo un entorno lo mas realista posible para responder a este experimento, por lo que las pruebas fueron apoyadas con el simulador online del péndulo simple de la Universidad de Colorado Boulder. La misma puede visitarlo en el siguiente enlace: https://phet.colorado.edu/es/simulation/pendulum-lab.
+
+### Estructura de almacenamiento de la información producida
+
+La estructura de almacenamiento de la información producida tiene que contener forzosamente:
+
+*	La longitud de la cuerda L(cm)
+*	Los periodos del péndulo simple P(s)
+*	Numero de oscilaciones (n)
+*	El valor del error mínimo obtenido a partir de la expresión ∆em = error/(n)
+
+Es muy preferible que la estructura del fichero de salida fuese una extensión del correspondiente a la entrada. Teniendo esto en cuenta, la estructura de almacenamiento de la información producida se propone que sea:
+
+Columna     | Contenido
+-----------|-----------
+L(cm)   | Longuitud de la cuerda (cm) obtenida.
+P(s)   | Periodos P (segundos) obtenido en la medición.
+N(oxi)   | Numero de oscilaciones obtenida en la medición.
+
+### Script que procesa la entrada y produce la salida
+
+El código siguiente muestra la captura de la información del archivo y su volcado en la consola de R:
+
+```{r eval=FALSE, include=TRUE}
+require(readr) # Carga el paquete que contiene la función read_csv
+ # Lectura (carga) del archivo
+mediciones <- read_csv(file = "mediciones.csv", col_names = TRUE, progress = FALSE)
+mediciones # Escritura en consola de lo leído
+```
+
+Obteniéndose el siguiente resultado:
+
+```{r eval=TRUE, include=FALSE, echo=FALSE, comment=NA}
+require(readr)
+ # Lectura (carga) del archivo
+mediciones <- read_csv(file = "mediciones.csv", col_names = TRUE, progress = FALSE)
+
+```
+```{r echo=FALSE, comment=NA}
+mediciones # Escritura en consola de lo leído
+
+```
+
+Abordaremos las funciones:
+
+* *DeltaTime* : calcula la precisión _relativa_ del error de acuerdo con el numero de las oscilaciones.
+* *Gravedad_cal* : Funcion que calcula la aceleracion de la gravedad.
+* *Gravedad.as.tibble* : obtiene una tibble con los datos y resultados.
+
+
+# Uso
+
+Se emplearon los archivos _mediciones.\*_ del proyecto. Todo lo que sigue supone que se hayan cargado las definiciones de las funciones en _funcs.R_ y el paquete. Esto se hace ejecutando:
+
+```{r comment=NA}
+source(file="funcs.R")
+```
+
+## Carga de datos de un archivo CSV
+
+Lo siguiente realiza la carga de la data en el archivo.
+
+```{r comment=NA}
+mediciones <- read_csv(file = "mediciones.csv", col_names = TRUE, progress = FALSE)
+```
+
+## Cálculo de la gravedad
+
+Al despejar T de la siguiente escuacion: $T \approx 2 \pi \sqrt {\frac {L} { g }}$ nos queda de la forma:
+
+$g \approx \frac{4 \pi^2 L}{T^2}$
+
+El código siguiente toma la data correspondiente al primer _tibble_ en _mediciones_ y produce otro con el resultado.
+
+```{r comment=NA}
+Gravedad.as.tibble <- function(l, p, n) {
+  tibble(L= l,
+         P= p,
+         N=n,
+         Den= Gravedad_cal(l = l, p = p, n = n))
+}
+```
+
+Observe que el resultado se escribe en consola. Naturalmente, pudiera asignarse a la variable que más convenga.
+
+El código siguiente ordena el procesamiento de las observacion en la _medicion_.
+
+```{r comment=NA}
+resultado <- Gravedad.as.tibble(l=mediciones$`L(cm)`,
+                                p=mediciones$`P(s)`,
+                                n=mediciones$`N(oxi)`)
+```
+
+
+## Resultado de la aceleracion de la gravedad
+
+El siguiente código produce el resultado:
+
+```{r comment=NA}
+resultado <- Gravedad.as.tibble(l=mediciones$`L(cm)`,
+                                p=mediciones$`P(s)`,
+                                n=mediciones$`N(oxi)`)
+
+resultado$Den
+```
+
+## Precisión de la observacion
+Como se ha tomado un rango de error de + y - 0.2, entre la cantidad de oscilaciones:
+```{r comment=NA}
+resultado$Den - DeltaTime()
+resultado$Den + DeltaTime()
+```
+
+## Fuentes de cada uno de los scripts/programas empleados para obtener lo solicitado. Los scripts/programas deben estar cuidadosamente comentados de manera de que sea entendible su propósito y lógica. [40%]
+
+
+## Documento con descripción detallada sobre cómo llevar a cabo la captación de datos y su procesamiento. [20%]
+
+## Soporte de exportación de la data y resultados, así como API de su uso en la componente de realización seleccionada. [20%]
+
+
+
+
+

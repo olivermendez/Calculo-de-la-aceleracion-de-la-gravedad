@@ -7,7 +7,7 @@
 #' 
 #' @return Error minimo
 #' 
-DeltaTime <- function(deltaT, n) {
+DeltaTime <- function(deltaT = 0.2, n = mediciones$`N(oxi)`) {
   deltaT / n
 }
 
@@ -47,14 +47,14 @@ require(tibble)
 #' @export
 #'
 
-Densidad.as.tibble <- function(l, p, n) {
+Gravedad.as.tibble <- function(l, p, n) {
   tibble(L= l,
          P= p,
          N=n,
-         Den= gravedad_cal(l = l, p = p, n = n))
+         Den= Gravedad_cal(l = l, p = p, n = n))
 }
 
-resultado <- densidad.as.tibble(l=mediciones$`L(cm)`,
+resultado <- Gravedad.as.tibble(l=mediciones$`L(cm)`,
                                 p=mediciones$`P(s)`,
                                 n=mediciones$`N(oxi)`)
 
