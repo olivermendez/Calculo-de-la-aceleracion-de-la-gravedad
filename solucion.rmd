@@ -1,6 +1,6 @@
 ---
 title: "Tarea 1"
-author: "Oliver Mendez"
+author: "Oliver Mendez [2017-5554]"
 date: "20 de septiembre 2020"
 output: html_document
 ---
@@ -11,9 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Es muy habitual la utilización de software para abordar estudios cuantitativos de muchos problemas físicos, ya que la realidad es tan compleja que el tratamiento matemático de la mayoría de los sistemas ofrece unas dificultades muy considerables.
 
-En esta ocasión, vamos a ilustrar el caso del péndulo simple. Así como lo detalla el ejercicio (Tarea 1), es un sistema idealizado de un solo grado de libertad, un objeto de masa m, sostenido por un hilo cuya masa es despreciable que puede describirse expresando en función del tiempo su distancia angular a una dirección de referencia, tal como la vertical en un determinado punto, el considerar este sistema como idealizado se restringe las observaciones a excluir la fricción presente.
+En esta ocasión, vamos a ilustrar el caso del péndulo simple. Así como lo detalla el ejercicio [(Tarea 1)](http://ac.orizondo.org/isc581/tareal01.html), es un sistema idealizado de un solo grado de libertad, un objeto de masa m, sostenido por un hilo cuya masa es despreciable que puede describirse expresando en función del tiempo su distancia angular a una dirección de referencia, tal como la vertical en un determinado punto, el considerar este sistema como idealizado se restringe las observaciones a excluir la fricción presente.
 
-# Estructura de la información de entrada
+![Péndulo simple](http://ac.orizondo.org/isc581/images/pendulum.jpg)
+
+Luego de aplicar las leyes de Newton al movimiento de la masa suspendida, se llega a la siguiente ecuación diferencial de segundo orden de la que puede obtenerse la evolución en el tiempo del ángulo θ, si se conoce la elongación inicial θ0 y velocidad angular inicial ν0:
+
+$\frac{d^{2} \theta }{dt^{2}}\, + \,\epsilon \, \sin \theta  = 0$
+
+## Estructura de la información de entrada
 
 Segun los requerimientos del ejercicio, se hace factible de manera favorable dar la información de entrada mediante un fichero delimitado por comas “,”. Ese fichero dispondría de dos columnas con sus nombres en la primera línea del fichero con el siguiente significado:
 
@@ -32,13 +38,20 @@ El fichero mediciones.csv, obtenido a partir del fichero mediciones.ods, es un e
 writeLines(readLines(con = "mediciones.csv"), sep = "\n")
 ```
 
-## Procedimento
+### Procedimento
 
 Para realizar las pruebas, se utilizo un entorno lo mas realista posible para responder a este experimento, por lo que las pruebas fueron apoyadas con el simulador online del péndulo simple de la Universidad de Colorado Boulder. La misma puede visitarlo en el siguiente enlace: https://phet.colorado.edu/es/simulation/pendulum-lab.
 
+#### Recolentando los siguientes datos:
+
+*	La longitud de la cuerda = **2.335cm**,
+*	Los periodos del péndulo simple = **15.33s**,
+*	Numero de oscilaciones = **5**
+*	Presicion = **0.2**
+
 ### Estructura de almacenamiento de la información producida
 
-La estructura de almacenamiento de la información producida tiene que contener forzosamente:
+La estructura de almacenamiento de la información producida contiene:
 
 *	La longitud de la cuerda L(cm)
 *	Los periodos del péndulo simple P(s)
@@ -146,14 +159,6 @@ Como se ha tomado un rango de error de + y - 0.2, entre la cantidad de oscilacio
 resultado$Den - DeltaTime()
 resultado$Den + DeltaTime()
 ```
-
-## Fuentes de cada uno de los scripts/programas empleados para obtener lo solicitado. Los scripts/programas deben estar cuidadosamente comentados de manera de que sea entendible su propósito y lógica. [40%]
-
-
-## Documento con descripción detallada sobre cómo llevar a cabo la captación de datos y su procesamiento. [20%]
-
-## Soporte de exportación de la data y resultados, así como API de su uso en la componente de realización seleccionada. [20%]
-
 
 
 
